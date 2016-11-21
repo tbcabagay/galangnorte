@@ -7,7 +7,10 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\ContactForm;
+use app\models\Testimonial;
+use app\models\TestimonialSearch;
+use yii\web\Response;
+use kartik\form\ActiveForm;
 
 class SiteController extends Controller
 {
@@ -60,7 +63,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new Testimonial();
+        $model->scenario = Testimonial::SCENARIO_INSERT;
+
+        return $this->render('index', [
+            'model' => $model,
+            'testimonials' => (new TestimonialSearch())->testimonial(),
+        ]);
     }
 
     /**
@@ -111,5 +120,45 @@ class SiteController extends Controller
         return $this->render('contact', [
             'model' => $model,
         ]);
+    }
+
+    public function actionTestimonialValidate()
+    {
+        $model = new Testimonial();
+        $model->scenario = Testimonial::SCENARIO_INSERT;
+
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_JSON;
+
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            return ActiveForm::validate($model);
+        }
+    }
+
+    public function actionTestimonialSubmit()
+    {
+        if (!Yii::$app->request->isAjax) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        $model = new Testimonial();
+        $model->scenario = Testimonial::SCENARIO_INSERT;
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->status = Testimonial::STATUS_NEW;
+
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            if ($model->save()) {
+                $response->data = ['status' => true];
+            }
+        }
+    }
+
+    protected function findTestimonials()
+    {
+        $model = Testimonial::find()->all();
+        return $model;
     }
 }

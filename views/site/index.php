@@ -1,6 +1,9 @@
 <?php
 
 use yii\helpers\Html;
+use yii\widgets\Pjax;
+use kartik\form\ActiveForm;
+use yii\widgets\ListView;
 
 /* @var $this yii\web\View */
 
@@ -223,22 +226,56 @@ $this->title = Yii::$app->params['appTitle'];
     </div>
 </section>
 
-<section id="contact">
+<section id="testimonial">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 text-center">
-                <h2 class="section-heading">Let's Get In Touch!</h2>
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Words From Our Clients</h2>
                 <hr class="primary">
-                <p>Ready to start your next project with us? That's great! Give us a call or send us an email and we will get back to you as soon as possible!</p>
             </div>
-            <div class="col-lg-4 col-lg-offset-2 text-center">
-                <i class="fa fa-phone fa-3x sr-contact"></i>
-                <p>123-456-6789</p>
+            <div class="col-lg-12">
+            <?php Pjax::begin(['id' => 'testimonial-pjax-1']); ?>
+                <?= ListView::widget([
+                    'dataProvider' => $testimonials,
+                    'itemView' => '_testimonial',
+                    'layout' => "{items}\n{pager}",
+                ]); ?>
+            <?php Pjax::end(); ?>
             </div>
-            <div class="col-lg-4 text-center">
-                <i class="fa fa-envelope-o fa-3x sr-contact"></i>
-                <p><a href="mailto:your-email@your-domain.com">feedback@startbootstrap.com</a></p>
+            <div class="col-lg-8 col-lg-offset-2">
+                <div class="testimonial-form well">
+                    <?php $form = ActiveForm::begin([
+                        'id' => 'testimonial-form-1',
+                        'action' => ['testimonial-submit'],
+                        'enableAjaxValidation' => true,
+                        'enableClientValidation' => false,
+                        'validationUrl' => ['testimonial-validate'],
+                        'options' => [
+                            'autocomplete' => 'off',
+                        ],
+                    ]); ?>
+
+                    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+
+                    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+
+                    <?= $form->field($model, 'organization')->textInput(['maxlength' => true]) ?>
+
+                    <?= $form->field($model, 'content')->textarea(['rows' => 6]) ?>
+
+                    <div class="form-group">
+                        <?= Html::submitButton(Yii::t('app', 'Write a Testimonial'), ['class' => 'btn btn-primary']) ?>
+                    </div>
+
+                    <?php ActiveForm::end(); ?>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<?php
+$this->registerJs('
+jQuery(document).on("beforeSubmit","#testimonial-form-1",function(){var t=jQuery(this);return jQuery.ajax({url:t.attr("action"),type:"post",data:t.serialize(),success:function(e){e.status&&(t.trigger("reset"),jQuery.pjax.reload({container:"#testimonial-pjax-1"}))}}),!1});
+');
+?>

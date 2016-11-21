@@ -38,14 +38,18 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
+    ],
+    'modules' => [
+        'markdown' => [
+            'class' => 'kartik\markdown\Module',
+            'smartyPants' => false,
+        ],
     ],
     'params' => $params,
 ];
