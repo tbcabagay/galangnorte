@@ -3,7 +3,10 @@
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 use kartik\form\ActiveForm;
+use kartik\form\ActiveField;
 use yii\widgets\ListView;
+use kartik\widgets\DatePicker;
+use kartik\widgets\TimePicker;
 
 /* @var $this yii\web\View */
 
@@ -15,7 +18,7 @@ $this->title = Yii::$app->params['appTitle'];
         <div class="header-content-inner">
             <h1 id="homeHeading">Welcome To Galang Norte<br>Van Rental</h1>
             <hr>
-            <a href="#about" class="btn btn-primary btn-xl page-scroll">Find Out More</a>
+            <?= Html::a('Find Out More', '#about', ['class' => 'btn btn-primary btn-xl page-scroll']) ?>
         </div>
     </div>
 </header>
@@ -67,104 +70,107 @@ $this->title = Yii::$app->params['appTitle'];
     </div>
 </section>
 
-<!--
-<section class="no-padding" id="portfolio">
-    <div class="container-fluid">
-        <div class="row no-gutter popup-gallery">
-            <div class="col-lg-4 col-sm-6">
-                <a href="img/portfolio/fullsize/1.jpg" class="portfolio-box">
-                    <img src="img/portfolio/thumbnails/1.jpg" class="img-responsive" alt="">
-                    <div class="portfolio-box-caption">
-                        <div class="portfolio-box-caption-content">
-                            <div class="project-category text-faded">
-                                Category
-                            </div>
-                            <div class="project-name">
-                                Project Name
-                            </div>
-                        </div>
-                    </div>
-                </a>
+<aside class="bg-primary">
+    <div class="container text-center">
+        <div class="call-to-action">
+            <?= Html::a('Make A Reservation Now!', '#reservations', ['class' => 'btn btn-default btn-xl sr-button page-scroll']) ?>
+        </div>
+    </div>
+</aside>
+
+<section id="reservations">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Plan Your Next Trip With Us</h2>
+                <hr>
             </div>
-            <div class="col-lg-4 col-sm-6">
-                <a href="img/portfolio/fullsize/2.jpg" class="portfolio-box">
-                    <img src="img/portfolio/thumbnails/2.jpg" class="img-responsive" alt="">
-                    <div class="portfolio-box-caption">
-                        <div class="portfolio-box-caption-content">
-                            <div class="project-category text-faded">
-                                Category
-                            </div>
-                            <div class="project-name">
-                                Project Name
-                            </div>
-                        </div>
-                    </div>
-                </a>
+            <?php $form = ActiveForm::begin([
+                'id' => 'reservation-form-1',
+                'action' => ['reservation-submit'],
+                'enableAjaxValidation' => true,
+                'enableClientValidation' => false,
+                'validationUrl' => ['reservation-validate'],
+                'formConfig' => [
+                    'showLabels' => false,
+                ],
+                'options' => [
+                    'autocomplete' => 'off',
+                ],
+            ]); ?>
+
+            <div class="col-lg-6">
+                <h4 class="text-center">Client Information</h4>
+                <hr>
+
+                <?= $form->field($reservation, 'name', [
+                    'feedbackIcon' => [
+                        'prefix' => 'fa fa-',
+                        'default' => 'user',
+                        'error' => 'warning',
+                        'success' => 'check',
+                    ],
+                ])->textInput(['maxlength' => true, 'placeholder' => 'Name']) ?>
+
+                <?= $form->field($reservation, 'email', [
+                    'feedbackIcon' => [
+                        'prefix' => 'fa fa-',
+                        'default' => 'envelope',
+                        'error' => 'warning',
+                        'success' => 'check',
+                    ],
+                ])->textInput(['maxlength' => true, 'placeholder' => 'Email']) ?>
+
+                <?= $form->field($reservation, 'phone', [
+                    'feedbackIcon' => [
+                        'prefix' => 'fa fa-',
+                        'default' => 'phone',
+                        'error' => 'warning',
+                        'success' => 'check',
+                    ],
+                ])->textInput(['maxlength' => true, 'placeholder' => 'Phone']) ?>
+
+                <?= $form->field($reservation, 'company', [
+                    'feedbackIcon' => [
+                        'prefix' => 'fa fa-',
+                        'default' => 'institution',
+                        'error' => 'warning',
+                        'success' => 'check',
+                    ],
+                ])->textInput(['maxlength' => true, 'placeholder' => 'Organization / Company']) ?>
             </div>
-            <div class="col-lg-4 col-sm-6">
-                <a href="img/portfolio/fullsize/3.jpg" class="portfolio-box">
-                    <img src="img/portfolio/thumbnails/3.jpg" class="img-responsive" alt="">
-                    <div class="portfolio-box-caption">
-                        <div class="portfolio-box-caption-content">
-                            <div class="project-category text-faded">
-                                Category
-                            </div>
-                            <div class="project-name">
-                                Project Name
-                            </div>
-                        </div>
-                    </div>
-                </a>
+            <div class="col-lg-6">
+                <h4 class="text-center">Trip Information</h4>
+                <hr>
+
+                <?= $form->field($reservation, 'when_date')->widget(DatePicker::classname(), [
+                    'options' => ['placeholder' => 'Pick-up Date'],
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                    ],
+                ]) ?>
+
+                <?= $form->field($reservation, 'when_time')->widget(TimePicker::classname(), [
+                    'options' => ['placeholder' => 'Pick-up Time'],
+                ]) ?>
+
+                <?= $form->field($reservation, 'where_pickup')->textInput(['maxlength' => true, 'placeholder' => 'Pick-up Location']) ?>
+
+                <?= $form->field($reservation, 'where_destination')->textInput(['maxlength' => true, 'placeholder' => 'Destination']) ?>
+
+                <?= $form->field($reservation, 'duration')->textInput(['placeholder' => 'How Many Days?']) ?>
             </div>
-            <div class="col-lg-4 col-sm-6">
-                <a href="img/portfolio/fullsize/4.jpg" class="portfolio-box">
-                    <img src="img/portfolio/thumbnails/4.jpg" class="img-responsive" alt="">
-                    <div class="portfolio-box-caption">
-                        <div class="portfolio-box-caption-content">
-                            <div class="project-category text-faded">
-                                Category
-                            </div>
-                            <div class="project-name">
-                                Project Name
-                            </div>
-                        </div>
-                    </div>
-                </a>
+            <div class="col-lg-8 col-lg-offset-2">
+                <div class="form-group last">
+                    <?= Html::submitButton(Yii::t('app', 'Submit'), ['class' => 'btn btn-success btn-block']) ?>
+                </div>
             </div>
-            <div class="col-lg-4 col-sm-6">
-                <a href="img/portfolio/fullsize/5.jpg" class="portfolio-box">
-                    <img src="img/portfolio/thumbnails/5.jpg" class="img-responsive" alt="">
-                    <div class="portfolio-box-caption">
-                        <div class="portfolio-box-caption-content">
-                            <div class="project-category text-faded">
-                                Category
-                            </div>
-                            <div class="project-name">
-                                Project Name
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-4 col-sm-6">
-                <a href="img/portfolio/fullsize/6.jpg" class="portfolio-box">
-                    <img src="img/portfolio/thumbnails/6.jpg" class="img-responsive" alt="">
-                    <div class="portfolio-box-caption">
-                        <div class="portfolio-box-caption-content">
-                            <div class="project-category text-faded">
-                                Category
-                            </div>
-                            <div class="project-name">
-                                Project Name
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
+
+            <?php ActiveForm::end(); ?>
+
         </div>
     </div>
 </section>
--->
 
 <section id="clients" class="bg-dark">
     <div class="container">
@@ -236,39 +242,79 @@ $this->title = Yii::$app->params['appTitle'];
             <div class="col-lg-12">
             <?php Pjax::begin(['id' => 'testimonial-pjax-1']); ?>
                 <?= ListView::widget([
-                    'dataProvider' => $testimonials,
+                    'dataProvider' => $dataProviderTestimonial,
                     'itemView' => '_testimonial',
                     'layout' => "{items}\n{pager}",
                 ]); ?>
             <?php Pjax::end(); ?>
             </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-dark">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Write A Testimonial</h2>
+                <hr class="light">
+            </div>
             <div class="col-lg-8 col-lg-offset-2">
-                <div class="testimonial-form well">
-                    <?php $form = ActiveForm::begin([
-                        'id' => 'testimonial-form-1',
-                        'action' => ['testimonial-submit'],
-                        'enableAjaxValidation' => true,
-                        'enableClientValidation' => false,
-                        'validationUrl' => ['testimonial-validate'],
-                        'options' => [
-                            'autocomplete' => 'off',
-                        ],
-                    ]); ?>
+                <?php $form = ActiveForm::begin([
+                    'id' => 'testimonial-form-1',
+                    'action' => ['testimonial-submit'],
+                    'enableAjaxValidation' => true,
+                    'enableClientValidation' => false,
+                    'validationUrl' => ['testimonial-validate'],
+                    'formConfig' => [
+                        'showLabels' => false,
+                    ],
+                    'options' => [
+                        'autocomplete' => 'off',
+                    ],
+                ]); ?>
 
-                    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($testimonial, 'name', [
+                    'feedbackIcon' => [
+                        'prefix' => 'fa fa-',
+                        'default' => 'user',
+                        'error' => 'warning',
+                        'success' => 'check',
+                    ],
+                ])->textInput(['maxlength' => true, 'placeholder' => 'Name']) ?>
 
-                    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($testimonial, 'email', [
+                    'feedbackIcon' => [
+                        'prefix' => 'fa fa-',
+                        'default' => 'envelope',
+                        'error' => 'warning',
+                        'success' => 'check',
+                    ],
+                ])->textInput(['maxlength' => true, 'placeholder' => 'Email']) ?>
 
-                    <?= $form->field($model, 'organization')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($testimonial, 'organization', [
+                    'feedbackIcon' => [
+                        'prefix' => 'fa fa-',
+                        'default' => 'institution',
+                        'error' => 'warning',
+                        'success' => 'check',
+                    ],
+                ])->textInput(['maxlength' => true, 'placeholder' => 'Company or Organization']) ?>
 
-                    <?= $form->field($model, 'content')->textarea(['rows' => 6]) ?>
+                <?= $form->field($testimonial, 'content', [
+                    'feedbackIcon' => [
+                        'prefix' => 'fa fa-',
+                        'default' => 'comment',
+                        'error' => 'warning',
+                        'success' => 'check',
+                    ],
+                ])->textarea(['rows' => 6, 'placeholder' => 'Place your message here']) ?>
 
-                    <div class="form-group">
-                        <?= Html::submitButton(Yii::t('app', 'Write a Testimonial'), ['class' => 'btn btn-primary']) ?>
-                    </div>
-
-                    <?php ActiveForm::end(); ?>
+                <div class="form-group">
+                    <?= Html::submitButton(Yii::t('app', 'Submit'), ['class' => 'btn btn-success btn-block']) ?>
                 </div>
+
+                <?php ActiveForm::end(); ?>
             </div>
         </div>
     </div>

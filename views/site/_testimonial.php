@@ -6,7 +6,7 @@ use kartik\markdown\Markdown;
 
 <div class="media well well-sm">
     <div class="media-left">
-        <i class="fa fa-user fa-3x text-muted"></i>
+        <i class="fa fa-user fa-2x text-muted"></i>
     </div>
     <div class="media-body">
         <h3 class="media-heading">

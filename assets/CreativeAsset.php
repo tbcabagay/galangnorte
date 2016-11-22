@@ -10,6 +10,7 @@ class CreativeAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/creative.min.css',
+        'css/site.css',
     ];
     public $js = [
         'js/creative.min.js',

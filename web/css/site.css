@@ -165,9 +165,19 @@
     padding: 0 100px 20px 20px;
   }
 }
-.testimonial-form {
-  margin-top: 40px;
+.bg-dark .kv-feedback-default,
+.bg-primary .kv-feedback-default {
+  color: #333;
 }
-#testimonial .media.well {
-  background-color: transparent;
+
+form input, form textarea {
+  font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+  padding: 18px !important;
+  /* border-radius: 12px !important; */
+}
+form .form-group {
+  margin-bottom: 28px;
+}
+form .form-group.last {
+  margin-bottom: 0;
 }

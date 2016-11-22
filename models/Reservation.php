@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%reservation}}".
@@ -23,6 +25,11 @@ use Yii;
  */
 class Reservation extends \yii\db\ActiveRecord
 {
+    const SCENARIO_INSERT = 'insert';
+    const STATUS_NEW = 5;
+    const STATUS_APPROVE = 10;
+    const STATUS_DELETE = 15;
+
     /**
      * @inheritdoc
      */
@@ -65,6 +72,26 @@ class Reservation extends \yii\db\ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+        ];
+    }
+
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_INSERT] = ['name', 'email', 'phone', 'company', 'when_date', 'when_time', 'where_pickup', 'where_destination', 'duration'];
+        return $scenarios;
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+            ],
         ];
     }
 }

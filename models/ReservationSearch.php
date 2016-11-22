@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Testimonial;
+use app\models\Reservation;
 
 /**
- * TestimonialSearch represents the model behind the search form about `app\models\Testimonial`.
+ * ReservationSearch represents the model behind the search form about `app\models\Reservation`.
  */
-class TestimonialSearch extends Testimonial
+class ReservationSearch extends Reservation
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class TestimonialSearch extends Testimonial
     public function rules()
     {
         return [
-            [['id', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['email', 'name', 'organization', 'content'], 'safe'],
+            [['id', 'duration', 'status', 'updated_at'], 'integer'],
+            [['name', 'email', 'phone', 'company', 'when_date', 'when_time', 'where_pickup', 'where_destination', 'created_at'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class TestimonialSearch extends Testimonial
      */
     public function search($params)
     {
-        $query = Testimonial::find();
+        $query = Reservation::find();
 
         // add conditions that should always apply here
 
@@ -60,32 +60,20 @@ class TestimonialSearch extends Testimonial
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'when_date' => $this->when_date,
+            'when_time' => $this->when_time,
+            'duration' => $this->duration,
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'organization', $this->organization])
-            ->andFilterWhere(['like', 'content', $this->content]);
-
-        return $dataProvider;
-    }
-
-    public function testimonial()
-    {
-        $query = Testimonial::find()->where(['status' => Testimonial::STATUS_APPROVE]);
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'sort' => [
-                'defaultOrder' => ['created_at' => SORT_DESC],
-            ],
-            'pagination' => [
-                'pageSize' => 5,
-            ],
-        ]);
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'phone', $this->phone])
+            ->andFilterWhere(['like', 'company', $this->company])
+            ->andFilterWhere(['like', 'where_pickup', $this->where_pickup])
+            ->andFilterWhere(['like', 'where_destination', $this->where_destination]);
 
         return $dataProvider;
     }

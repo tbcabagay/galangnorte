@@ -53,21 +53,10 @@ CreativeAsset::register($this);
         'items' => [
             ['label' => 'About', 'url' => '#about', 'linkOptions' => ['class' => 'page-scroll']],
             ['label' => 'Services', 'url' => '#services', 'linkOptions' => ['class' => 'page-scroll']],
+            ['label' => 'Reservations', 'url' => '#reservations', 'linkOptions' => ['class' => 'page-scroll']],
             ['label' => 'Clients', 'url' => '#clients', 'linkOptions' => ['class' => 'page-scroll']],
             ['label' => 'Testimonials', 'url' => '#testimonial', 'linkOptions' => ['class' => 'page-scroll']],
             ['label' => 'Contact', 'url' => '#contact', 'linkOptions' => ['class' => 'page-scroll']],
-            /*Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )*/
         ],
     ]);
     NavBar::end();

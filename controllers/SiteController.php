@@ -9,6 +9,8 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\Testimonial;
 use app\models\TestimonialSearch;
+use app\models\Reservation;
+use app\models\ReservationSearch;
 use yii\web\Response;
 use kartik\form\ActiveForm;
 
@@ -63,12 +65,16 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $model = new Testimonial();
-        $model->scenario = Testimonial::SCENARIO_INSERT;
+        $testimonial = new Testimonial();
+        $testimonial->scenario = Testimonial::SCENARIO_INSERT;
+
+        $reservation = new Reservation();
+        $reservation->scenario = Reservation::SCENARIO_INSERT;
 
         return $this->render('index', [
-            'model' => $model,
-            'testimonials' => (new TestimonialSearch())->testimonial(),
+            'testimonial' => $testimonial,
+            'reservation' => $reservation,
+            'dataProviderTestimonial' => (new TestimonialSearch())->testimonial(),
         ]);
     }
 
@@ -146,6 +152,40 @@ class SiteController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $model->status = Testimonial::STATUS_NEW;
+
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            if ($model->save()) {
+                $response->data = ['status' => true];
+            }
+        }
+    }
+
+    public function actionReservationValidate()
+    {
+        $model = new Reservation();
+        $model->scenario = Reservation::SCENARIO_INSERT;
+
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_JSON;
+
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            return ActiveForm::validate($model);
+        }
+    }
+
+    public function actionReservationSubmit()
+    {
+        if (!Yii::$app->request->isAjax) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        $model = new Reservation();
+        $model->scenario = Reservation::SCENARIO_INSERT;
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->status = Reservation::STATUS_NEW;
 
             $response = Yii::$app->response;
             $response->format = Response::FORMAT_JSON;
