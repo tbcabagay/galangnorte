@@ -12,12 +12,14 @@ use app\assets\FontAwesomeAsset;
 use app\assets\ScrollRevealAsset;
 use app\assets\MagnificPopupAsset;
 use app\assets\CreativeAsset;
+use app\assets\BootboxAsset;
 
 AppAsset::register($this);
 FontAwesomeAsset::register($this);
 ScrollRevealAsset::register($this);
 MagnificPopupAsset::register($this);
 CreativeAsset::register($this);
+BootboxAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

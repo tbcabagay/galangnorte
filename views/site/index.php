@@ -143,22 +143,55 @@ $this->title = Yii::$app->params['appTitle'];
                 <h4 class="text-center">Trip Information</h4>
                 <hr>
 
-                <?= $form->field($reservation, 'when_date')->widget(DatePicker::classname(), [
+                <?= $form->field($reservation, 'when_date', [
+                    'feedbackIcon' => [
+                        'prefix' => 'fa fa-',
+                        'error' => 'warning',
+                        'success' => 'check',
+                    ],
+                ])->widget(DatePicker::classname(), [
                     'options' => ['placeholder' => 'Pick-up Date'],
                     'pluginOptions' => [
                         'autoclose' => true,
+                        'format' => 'yyyy-mm-dd',
+                        'todayHighlight' => true,
                     ],
                 ]) ?>
 
                 <?= $form->field($reservation, 'when_time')->widget(TimePicker::classname(), [
                     'options' => ['placeholder' => 'Pick-up Time'],
+                    'pluginOptions' => [
+                        'defaultTime' => false,
+                        'minuteStep' => 5,
+                    ],
                 ]) ?>
 
-                <?= $form->field($reservation, 'where_pickup')->textInput(['maxlength' => true, 'placeholder' => 'Pick-up Location']) ?>
+                <?= $form->field($reservation, 'where_pickup', [
+                    'feedbackIcon' => [
+                        'prefix' => 'fa fa-',
+                        'default' => 'location-arrow',
+                        'error' => 'warning',
+                        'success' => 'check',
+                    ],
+                ])->textInput(['maxlength' => true, 'placeholder' => 'Pick-up Location']) ?>
 
-                <?= $form->field($reservation, 'where_destination')->textInput(['maxlength' => true, 'placeholder' => 'Destination']) ?>
+                <?= $form->field($reservation, 'where_destination', [
+                    'feedbackIcon' => [
+                        'prefix' => 'fa fa-',
+                        'default' => 'map',
+                        'error' => 'warning',
+                        'success' => 'check',
+                    ],
+                ])->textInput(['maxlength' => true, 'placeholder' => 'Destination']) ?>
 
-                <?= $form->field($reservation, 'duration')->textInput(['placeholder' => 'How Many Days?']) ?>
+                <?= $form->field($reservation, 'duration', [
+                    'feedbackIcon' => [
+                        'prefix' => 'fa fa-',
+                        'default' => 'hourglass',
+                        'error' => 'warning',
+                        'success' => 'check',
+                    ],
+                ])->textInput(['placeholder' => 'How Many Days?']) ?>
             </div>
             <div class="col-lg-8 col-lg-offset-2">
                 <div class="form-group last">
@@ -322,6 +355,65 @@ $this->title = Yii::$app->params['appTitle'];
 
 <?php
 $this->registerJs('
-jQuery(document).on("beforeSubmit","#testimonial-form-1",function(){var t=jQuery(this);return jQuery.ajax({url:t.attr("action"),type:"post",data:t.serialize(),success:function(e){e.status&&(t.trigger("reset"),jQuery.pjax.reload({container:"#testimonial-pjax-1"}))}}),!1});
+/*var myApp = {
+    form : function(form = null, pjaxContainer = null) {
+        jQuery(document).on("beforeSubmit", form, function(e) {
+            var f = jQuery(this);
+            jQuery.ajax({
+                url: f.attr("action"),
+                type: "post",
+                data: f.serialize(),
+                success: function(r){
+                    if (r.status) {
+                        if (pjaxContainer != null) {
+                            jQuery.pjax.reload({ container: pjaxContainer });
+                        }
+                        f.trigger("reset");
+                        bootbox.alert(r.message);
+                    }
+                }
+            });
+            return false;
+        });
+    },
+}*/
+var myApp = {
+    formName : null,
+    pjaxContainer : null,
+    form : function(form = null, pjaxContainer = null) {
+        jQuery(document).on("beforeSubmit", form, function(e) {
+            myApp.formName = form;
+            if (pjaxContainer != null) {
+                myApp.pjaxContainer = pjaxContainer;
+            }
+            bootbox.confirm("Are you sure you want to submit this data?", function(r) {
+                if (r) {
+                    myApp.submit();
+                }
+            });
+            return false;
+        });
+    },
+    submit : function() {
+        var f = jQuery(myApp.formName);
+        var p = myApp.pjaxContainer;
+        jQuery.ajax({
+            url: f.attr("action"),
+            type: "post",
+            data: f.serialize(),
+            success: function(r){
+                if (r.status) {
+                    if (p != null) {
+                        jQuery.pjax.reload({ container: p });
+                    }
+                    f.trigger("reset");
+                    bootbox.alert(r.message);
+                }
+            }
+        });
+    },
+}
+myApp.form("#testimonial-form-1");
+myApp.form("#reservation-form-1");
 ');
 ?>

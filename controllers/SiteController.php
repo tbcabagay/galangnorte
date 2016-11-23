@@ -6,6 +6,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 use app\models\LoginForm;
 use app\models\Testimonial;
 use app\models\TestimonialSearch;
@@ -130,13 +131,17 @@ class SiteController extends Controller
 
     public function actionTestimonialValidate()
     {
+        if (!Yii::$app->request->isAjax) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
         $model = new Testimonial();
         $model->scenario = Testimonial::SCENARIO_INSERT;
 
         $response = Yii::$app->response;
         $response->format = Response::FORMAT_JSON;
 
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
             return ActiveForm::validate($model);
         }
     }
@@ -157,20 +162,27 @@ class SiteController extends Controller
             $response->format = Response::FORMAT_JSON;
 
             if ($model->save()) {
-                $response->data = ['status' => true];
+                $response->data = [
+                    'status' => true,
+                    'message' => 'Thank you for giving a testimonial.',
+                ];
             }
         }
     }
 
     public function actionReservationValidate()
     {
+        if (!Yii::$app->request->isAjax) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
         $model = new Reservation();
         $model->scenario = Reservation::SCENARIO_INSERT;
 
         $response = Yii::$app->response;
         $response->format = Response::FORMAT_JSON;
 
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
             return ActiveForm::validate($model);
         }
     }
@@ -191,14 +203,19 @@ class SiteController extends Controller
             $response->format = Response::FORMAT_JSON;
 
             if ($model->save()) {
-                $response->data = ['status' => true];
+                $adminEmail = Yii::$app->params['adminEmail'];
+
+                Yii::$app->mailer->compose('reservation', ['model' => $model])
+                    ->setFrom($adminEmail)
+                    ->setTo($adminEmail)
+                    ->setSubject('Galang Norte Trip Schedule Reservation')
+                    ->send();
+
+                $response->data = [
+                    'status' => true,
+                    'message' => 'We have received your trip details and we will contact you as soon as possible either via mail or phone. Thank you for choosing us!',
+                ];
             }
         }
-    }
-
-    protected function findTestimonials()
-    {
-        $model = Testimonial::find()->all();
-        return $model;
     }
 }

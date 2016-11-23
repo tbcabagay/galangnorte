@@ -46,6 +46,7 @@ class Testimonial extends \yii\db\ActiveRecord
             [['name'], 'string', 'max' => 150],
             [['organization'], 'string', 'max' => 100],
             [['email'], 'email'],
+            [['email', 'name', 'organization', 'content'], 'trim'],
         ];
     }
 

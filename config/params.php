@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'adminEmail' => 'admin@example.com',
+    'adminEmail' => 'galangnorte@gmail.com',
     'appTitle' => 'Galang Norte Van Rental',
 ];

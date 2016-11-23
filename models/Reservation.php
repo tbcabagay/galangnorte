@@ -44,12 +44,18 @@ class Reservation extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'email', 'phone', 'when_date', 'when_time', 'where_pickup', 'where_destination', 'duration', 'status', 'created_at', 'updated_at'], 'required'],
-            [['when_date', 'when_time', 'created_at'], 'safe'],
-            [['duration', 'status', 'updated_at'], 'integer'],
+            [['name', 'email', 'phone', 'company', 'when_date', 'when_time', 'where_pickup', 'where_destination', 'duration', 'status', 'created_at', 'updated_at'], 'required'],
+            [['created_at'], 'safe'],
+            [['when_date'], 'date', 'format' => 'php:Y-m-d'],
+            [['status', 'updated_at'], 'integer'],
+            [['duration'], 'integer', 'min' => 1, 'max' => 100],
             [['name', 'email', 'where_pickup', 'where_destination'], 'string', 'max' => 150],
             [['phone'], 'string', 'max' => 50],
             [['company'], 'string', 'max' => 100],
+            [['when_time'], 'string', 'max' => 8],
+            [['email'], 'email'],
+            [['phone'], 'match', 'pattern' => '/^[0-9-]+$/'],
+            [['name', 'email', 'phone', 'company', 'when_date', 'when_time', 'where_pickup', 'where_destination', 'duration'], 'trim'],
         ];
     }
 

@@ -22,9 +22,9 @@ class m161121_062340_init extends Migration
             'name' => $this->string(150)->notNull(),
             'email' => $this->string(150)->notNull(),
             'phone' => $this->string(50)->notNull(),
-            'company' => $this->string(100),
+            'company' => $this->string(100)->notNull(),
             'when_date' => $this->date()->notNull(),
-            'when_time' => $this->time()->notNull(),
+            'when_time' => $this->char(8)->notNull(),
             'where_pickup' => $this->string(150)->notNull(),
             'where_destination' => $this->string(150)->notNull(),
             'duration' => $this->smallInteger()->notNull(),
@@ -37,5 +37,6 @@ class m161121_062340_init extends Migration
     public function down()
     {
         $this->dropTable('{{%testimonial}}');
+        $this->dropTable('{{%reservation}}');
     }
 }
