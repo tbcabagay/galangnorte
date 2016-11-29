@@ -73,7 +73,7 @@ $this->title = Yii::$app->params['appTitle'];
 <aside class="bg-primary">
     <div class="container text-center">
         <div class="call-to-action">
-            <?= Html::a('Make A Reservation Now!', '#reservations', ['class' => 'btn btn-default btn-xl sr-button page-scroll']) ?>
+            <?= Html::a('Make Your Reservation Now!', '#reservations', ['class' => 'btn btn-default btn-xl sr-button page-scroll']) ?>
         </div>
     </div>
 </aside>

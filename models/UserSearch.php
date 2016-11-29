@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Reservation;
+use app\models\User;
 
 /**
- * ReservationSearch represents the model behind the search form about `app\models\Reservation`.
+ * UserSearch represents the model behind the search form about `app\models\User`.
  */
-class ReservationSearch extends Reservation
+class UserSearch extends User
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class ReservationSearch extends Reservation
     public function rules()
     {
         return [
-            [['id', 'duration', 'status', 'updated_at'], 'integer'],
-            [['name', 'email', 'phone', 'company', 'when_date', 'when_time', 'where_pickup', 'where_destination', 'created_at'], 'safe'],
+            [['id', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['email', 'auth_key'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class ReservationSearch extends Reservation
      */
     public function search($params)
     {
-        $query = Reservation::find();
+        $query = User::find();
 
         // add conditions that should always apply here
 
@@ -60,20 +60,13 @@ class ReservationSearch extends Reservation
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'when_date' => $this->when_date,
-            'duration' => $this->duration,
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'phone', $this->phone])
-            ->andFilterWhere(['like', 'company', $this->company])
-            ->andFilterWhere(['like', 'when_time', $this->when_time])
-            ->andFilterWhere(['like', 'where_pickup', $this->where_pickup])
-            ->andFilterWhere(['like', 'where_destination', $this->where_destination]);
+        $query->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'auth_key', $this->auth_key]);
 
         return $dataProvider;
     }

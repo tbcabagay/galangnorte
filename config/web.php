@@ -1,6 +1,7 @@
 <?php
 
 $params = require(__DIR__ . '/params.php');
+$config = parse_ini_file('/home/tbcabagay/web.ini');
 
 $config = [
     'id' => 'basic',
@@ -30,8 +31,8 @@ $config = [
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.gmail.com',
-                'username' => 'galangnorte@gmail.com',
-                'password' => 'galangN0rt3',
+                'username' => $config['vanrental_mailer_username'],
+                'password' => $config['vanrental_mailer_password'],
                 'port' => '465',
                 'encryption' => 'ssl',
             ],
@@ -56,11 +57,24 @@ $config = [
             'timeZone' => 'Asia/Manila',
             'currencyCode' => 'PHP',
         ],
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'google' => [
+                    'class' => 'yii\authclient\clients\Google',
+                    'clientId' => '558930206427-nofsd4tff3jul63iklqekpnvuqte86ed.apps.googleusercontent.com',
+                    'clientSecret' => 'F0cJk2LxgGbaRxEYnCezcjy0',
+                ],
+            ],
+        ],
     ],
     'modules' => [
         'markdown' => [
             'class' => 'kartik\markdown\Module',
             'smartyPants' => false,
+        ],
+        'administrator' => [
+            'class' => 'app\modules\administrator\Module',
         ],
     ],
     'params' => $params,
